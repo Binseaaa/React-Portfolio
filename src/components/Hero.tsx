@@ -129,7 +129,7 @@ const Hero: React.FC = () => (
         className="relative mx-auto aspect-square w-full max-w-md overflow-hidden rounded-3xl border border-emerald-200/70 bg-gradient-to-br from-emerald-100 via-white to-emerald-50 p-3 shadow-2xl backdrop-blur dark:border-emerald-700/40 dark:from-emerald-900/40 dark:via-emerald-950/60 dark:to-emerald-900/30"
       >
         <img
-          src="public\me.jpg"
+          src="me.jpg"
           alt="Vince Deguma"
           className="h-full w-full rounded-2xl object-cover"
         />
