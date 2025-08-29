@@ -1,17 +1,17 @@
 [
   {
-    "title": "CineCut Studio",
-    "blurb": "A mini NLE in the browser for quick social cuts and aspect swaps.",
-    "tags": ["React", "FFmpeg.wasm", "Tailwind"],
-    "href": "#",
-    "cover": "https://images.unsplash.com/photo-1517059224940-d4af9eec41e5?q=80&w=1470&auto=format&fit=crop"
+    "title": "DILG Leave CTO System",
+    "blurb": "A full‑stack system where employees can apply for leave or CTO and access a personal dashboard to track their requests, balances, and status.",
+    "tags": ["Laravel", "MySQL", "Tailwind"],
+    "href": "https://leave-cto.dilgbohol.com/",
+    "cover": "/DILG Leave CTO.png"
   },
   {
-    "title": "GreenTrail Web",
-    "blurb": "Marketing site with CMS and aLeaf theme, focused on performance.",
-    "tags": ["Next.js", "CMS", "SEO"],
-    "href": "#",
-    "cover": "https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1470&auto=format&fit=crop"
+    "title": "DILG Information System",
+    "blurb": "Enhanced and optimized an existing system by improving its design, updating functionalities, and streamlining overall performance.",
+    "tags": ["Vite", "InertiaJS", "MySQL"],
+    "href": "https://dilgbohol.com/",
+    "cover": "/DILG IS.png"
   },
   {
     "title": "FrameForge",
