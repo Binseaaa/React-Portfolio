@@ -2,11 +2,11 @@ import React, { useMemo } from "react";
 import { motion } from "framer-motion";
 import { ExternalLink } from "lucide-react";
 import projects from "../jsons/projects.json";
-import Contact from "../components/contact";
+import Contact from "../components/Contact";
 import Footer from "../components/Footer";
 import Skills from "../components/Skills";
 import Hero from "../components/Hero";
-import Header from "../components/header";
+import Header from "../components/Header";
 
 type Project = {
   title: string;
