@@ -102,12 +102,11 @@ const Portfolio: React.FC = () => {
           <h2 className="text-3xl font-bold">About Me</h2>
           <Divider />
           <p className="text-emerald-900/80 dark:text-emerald-100/80">
-            I build modern, responsive interfaces with a sharp eye for motion
-            and brand. My background in
-            <span className="mx-1 font-semibold">video editing</span> and{" "}
-            <span className="mx-1 font-semibold">graphics design</span>
-            helps me ship sites that feel cinematic yet fast. I love green,
-            clean code, and high Lighthouse scores.
+            I am a Web Developer, Video Editor, and Graphic Designer with 2
+            years of freelance experience and full-stack development background
+            from my internship at DILG Bohol. I create web applications,
+            engaging video content, and graphic designs, focusing on delivering
+            efficient and user-friendly digital solutions.
           </p>
         </div>
       </Section>
