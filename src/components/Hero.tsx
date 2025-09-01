@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Mail, Github, Linkedin, Facebook } from "lucide-react";
+import { ArrowRight, Github, Linkedin, Facebook } from "lucide-react";
 
 const concepts = ["Video", "Web", "Graphics"] as const;
 
