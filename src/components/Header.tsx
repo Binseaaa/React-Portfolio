@@ -1,4 +1,4 @@
-import { Sun, Moon } from "lucide-react";
+import { Sun, Moon, FileText } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
 const useTheme = () => {
@@ -75,16 +75,34 @@ const Header: React.FC = () => {
             </a>
           ))}
         </nav>
-        <button
-          aria-label="Toggle theme"
-          onClick={toggle}
-          className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-white/60 px-3 py-1.5 text-emerald-800 shadow backdrop-blur transition hover:bg-white md:px-4 dark:border-emerald-700/40 dark:bg-emerald-900/40 dark:text-emerald-100"
-        >
-          {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-          <span className="hidden text-xs md:inline">
-            {dark ? "Light" : "Dark"}
-          </span>
-        </button>
+        <div className="gap-2 flex items-center">
+          <button
+            aria-label="Toggle theme"
+            onClick={toggle}
+            className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-white/60 px-3 py-1.5 text-emerald-800 shadow backdrop-blur transition hover:bg-white md:px-4 dark:border-emerald-700/40 dark:bg-emerald-900/40 dark:text-emerald-100"
+          >
+            {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            <span className="hidden text-xs md:inline">
+              {dark ? "Light" : "Dark"}
+            </span>
+          </button>
+          <a
+            href="https://drive.google.com/file/d/1mUXh423EoQiNDXuzmRwwVk_jWsS2laH2/view?usp=sharing"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group inline-flex items-center gap-2 rounded-full border border-emerald-200/60 bg-white/60 
+             px-3 py-1.5 text-xs font-medium text-emerald-900 shadow-sm backdrop-blur transition 
+             hover:bg-white hover:shadow-md hover:border-emerald-300/70 
+             focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/60 focus-visible:ring-offset-2 focus-visible:ring-offset-white 
+             dark:border-emerald-700/50 dark:bg-emerald-900/40 dark:text-emerald-50 
+             dark:hover:bg-emerald-900/55 dark:hover:border-emerald-600/60 
+             dark:focus-visible:ring-offset-emerald-900/20
+             md:px-4"
+          >
+            <FileText className="h-4 w-4 transition group-hover:opacity-90" />
+            <span className="hidden md:inline">Resume</span>
+          </a>
+        </div>
       </div>
     </header>
   );

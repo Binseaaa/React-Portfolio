@@ -93,31 +93,25 @@ const Hero: React.FC = () => (
 
         <div className="mt-8 flex items-center gap-4">
           <a
-            href="mailto:deguma.vince@gmail.com"
-            className="rounded-full border border-emerald-300 p-2 text-emerald-700 transition hover:bg-white dark:border-emerald-700/40 dark:text-emerald-200"
-          >
-            <Mail className="h-5 w-5" />
-          </a>
-          <a
             href="https://github.com/Binseaaa"
             target="_blank"
-            className="rounded-full border border-emerald-300 p-2 text-emerald-700 transition hover:bg-white dark:border-emerald-700/40 dark:text-emerald-200"
+            className="rounded-full border border-emerald-300 p-2 text-emerald-700 transition hover:bg-white hover:text-black dark:border-emerald-700/40 dark:text-emerald-200"
           >
-            <Github className="h-5 w-5" />
+            <Github className="h-5 w-5 hover:text-black" />
           </a>
           <a
             href="https://www.linkedin.com/in/vince-deguma-83606536a/"
             target="_blank"
-            className="rounded-full border border-emerald-300 p-2 text-emerald-700 transition hover:bg-white dark:border-emerald-700/40 dark:text-emerald-200"
+            className="rounded-full border border-emerald-300 p-2 text-emerald-700 transition hover:bg-white hover:text-black dark:border-emerald-700/40 dark:text-emerald-200"
           >
-            <Linkedin className="h-5 w-5" />
+            <Linkedin className="h-5 w-5 hover:text-black" />
           </a>
           <a
             href="https://www.facebook.com/davinccii14"
             target="_blank"
-            className="rounded-full border border-emerald-300 p-2 text-emerald-700 transition hover:bg-white dark:border-emerald-700/40 dark:text-emerald-200"
+            className="rounded-full border border-emerald-300 p-2 text-emerald-700 transition hover:bg-white hover:text-black dark:border-emerald-700/40 dark:text-emerald-200"
           >
-            <Facebook className="h-5 w-5" />
+            <Facebook className="h-5 w-5 hover:text-black" />
           </a>
         </div>
       </div>

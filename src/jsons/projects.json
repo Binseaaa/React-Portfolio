@@ -13,11 +13,11 @@
     "href": "https://dilgbohol.com/",
     "cover": "/DILG IS.png"
   },
-  {
-    "title": "FrameForge",
-    "blurb": "Template pack and brand kit generator for creators.",
-    "tags": ["TypeScript", "Design"],
-    "href": "#",
-    "cover": "https://images.unsplash.com/photo-1496307042754-b4aa456c4a2d?q=80&w=1470&auto=format&fit=crop"
+    {
+    "title": "Push To Start",
+    "blurb": "A web platform built with Wix that showcases AutoCAD automation tools and workflows.",
+    "tags": ["Wix", "Web Design", "SEO"],
+    "href": "",
+    "cover": "/pushtostart.png"
   }
 ]

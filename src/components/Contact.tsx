@@ -22,12 +22,16 @@ const Contact: React.FC = () => (
         </div>
         <a
           href="https://github.com/Binseaaa"
+          target="_blank"
+          rel="noopener noreferrer"
           className="inline-flex items-center gap-2 rounded-2xl border border-emerald-300 bg-white/50 px-6 py-3 font-semibold text-emerald-800 shadow-sm backdrop-blur transition hover:bg-white dark:border-emerald-700/40 dark:bg-emerald-900/40 dark:text-emerald-100"
         >
           <Github className="h-4 w-4" /> GitHub
         </a>
         <a
           href="https://www.linkedin.com/in/vince-deguma-83606536a/"
+          target="_blank"
+          rel="noopener noreferrer"
           className="inline-flex items-center gap-2 rounded-2xl border border-emerald-300 bg-white/50 px-6 py-3 font-semibold text-emerald-800 shadow-sm backdrop-blur transition hover:bg-white dark:border-emerald-700/40 dark:bg-emerald-900/40 dark:text-emerald-100"
         >
           <Linkedin className="h-4 w-4" /> LinkedIn
