@@ -14,6 +14,16 @@ const Section: React.FC<{
   </section>
 );
 
+const scrollToId =
+  (id: string, offset = 80) =>
+  (e: React.MouseEvent) => {
+    e.preventDefault();
+    const el = document.getElementById(id);
+    if (!el) return;
+    const y = el.getBoundingClientRect().top + window.pageYOffset - offset;
+    window.scrollTo({ top: y, behavior: "smooth" });
+  };
+
 const WordCarousel: React.FC = () => {
   const [index, setIndex] = useState(0);
   useEffect(() => {
@@ -79,6 +89,7 @@ const Hero: React.FC = () => (
         <div className="flex flex-wrap items-center gap-4">
           <a
             href="#projects"
+            onClick={scrollToId("projects", 96)} // adjust offset to your header height
             className="inline-flex items-center gap-2 rounded-2xl bg-emerald-600 px-6 py-3 font-semibold text-white shadow-lg shadow-emerald-600/30 transition hover:-translate-y-0.5 hover:bg-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-400 dark:bg-emerald-500 dark:hover:bg-emerald-400"
           >
             See my work <ArrowRight className="h-4 w-4" />
