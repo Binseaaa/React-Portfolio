@@ -35,6 +35,7 @@ const Badge: React.FC<{ children: React.ReactNode }> = ({ children }) => (
 const ProjectCard: React.FC<{ p: Project }> = ({ p }) => (
   <motion.a
     href={p.href}
+    target="_blank"
     whileHover={{ y: -6 }}
     className="group relative overflow-hidden rounded-2xl border border-emerald-200 bg-white/70 shadow-lg backdrop-blur transition dark:border-emerald-700/40 dark:bg-emerald-900/40"
   >
