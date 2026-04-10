@@ -15,6 +15,7 @@ type Project = {
   category: "video" | "web" | "design";
   href?: string;
   cover?: string;
+  video?: string; // ✅ ADD THIS
 };
 
 const Section: React.FC<{
@@ -42,11 +43,13 @@ const ProjectCard: React.FC<{ p: Project }> = ({ p }) => (
   >
     <div className="relative h-48 w-full overflow-hidden">
       {p.cover ? (
-        <img
-          src={p.cover}
-          alt={p.title}
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-        />
+      <img
+        src={p.cover}
+        loading="lazy"
+        decoding="async"
+        fetchPriority="low"
+        className="w-full h-auto object-cover"
+      />
       ) : (
         <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-emerald-200 to-emerald-100 dark:from-emerald-800 dark:to-emerald-700" />
       )}
@@ -77,16 +80,18 @@ const ProjectCard: React.FC<{ p: Project }> = ({ p }) => (
 const VideoCard: React.FC<{ p: Project }> = ({ p }) => (
   <div className="group relative overflow-hidden rounded-2xl bg-black shadow-lg">
     <video
-      src={p.cover}
-      className="w-full h-full object-cover aspect-[9/16] transition-transform duration-300 group-hover:scale-105"
-      autoPlay
-      loop
+      src={p.video}
+      poster={p.cover}
+      preload="metadata"
       muted
+      loop
       playsInline
-      controls
+      className="w-full h-full object-cover"
     />
 
-    {/* Overlay */}
+    {/* Optional play indicator (better UX) */}
+    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition" />
+
     <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/70 to-transparent pointer-events-none">
       <h3 className="text-white text-sm font-semibold">{p.title}</h3>
     </div>
@@ -94,10 +99,12 @@ const VideoCard: React.FC<{ p: Project }> = ({ p }) => (
 );
 
 const DesignCard: React.FC<{ p: Project }> = ({ p }) => (
-  <div className="mb-4 break-inside-avoid overflow-hidden rounded-2xl bg-black shadow-lg">
+  <div className="mb-4 break-inside-avoid overflow-hidden rounded-2xl bg-black shadow-lg group">
     <img
       src={p.cover}
       alt={p.title}
+      loading="lazy"
+      decoding="async"
       className="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-105"
     />
   </div>
@@ -144,9 +151,16 @@ const Portfolio: React.FC = () => {
 
   // ✅ Current projects (SINGLE SOURCE OF TRUTH)
   const currentProjects = useMemo(() => {
-    if (activeTab === "video") return videoProjects;
-    if (activeTab === "web") return webProjects;
-    return designProjects;
+    switch (activeTab) {
+      case "video":
+        return videoProjects;
+      case "web":
+        return webProjects;
+      case "design":
+        return designProjects;
+      default:
+        return [];
+    }
   }, [activeTab, videoProjects, webProjects, designProjects]);
 
   return (
@@ -186,14 +200,14 @@ const Portfolio: React.FC = () => {
 
         {/* Grid */}
           <div
-            className={`grid gap-4 ${
-              activeTab === "video"
-                ? "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"
-                : activeTab === "design"
-                ? "grid-cols-2 sm:grid-cols-3 lg:grid-cols-3"
-                : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
-            }`}
-          >
+              className={`grid gap-4 ${
+                activeTab === "video"
+                  ? "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"
+                  : activeTab === "design"
+                  ? "grid-cols-2 sm:grid-cols-3 lg:grid-cols-3"
+                  : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+              }`}
+            >
           {currentProjects.map((p, i) =>
             activeTab === "video" ? (
               <VideoCard key={`video-${p.title}-${i}`} p={p} />
