@@ -106,19 +106,5 @@
     "tags": ["Capcut", "Dreamface"],
     "category": "video",
     "cover": "/Videos/Oats.mp4"
- },
- {
-    "title": "",
-    "blurb": "High-converting ad video with motion graphics.",
-    "tags": ["Capcut", "Dreamface"],
-    "category": "video",
-    "cover": "/Videos/ME1.mp4"
-  },
-{
-    "title": "",
-    "blurb": "High-converting ad video with motion graphics.",
-    "tags": ["Capcut", "Dreamface"],
-    "category": "video",
-    "cover": "/Videos/ME2.mp4"
-  }
+ }
 ]
