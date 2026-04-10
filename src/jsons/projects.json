@@ -1,8 +1,9 @@
 [
   {
     "title": "DILG Leave CTO System",
-    "blurb": "A full‑stack system where employees can apply for leave or CTO and access a personal dashboard to track their requests, balances, and status.",
+    "blurb": "A full-stack system where employees can apply for leave or CTO and access a personal dashboard to track their requests, balances, and status.",
     "tags": ["Laravel", "MySQL", "Tailwind"],
+    "category": "web",
     "href": "https://leave-cto.dilgbohol.com/",
     "cover": "/DILG Leave CTO.png"
   },
@@ -10,14 +11,107 @@
     "title": "DILG Information System",
     "blurb": "Enhanced and optimized an existing system by improving its design, updating functionalities, and streamlining overall performance.",
     "tags": ["Vite", "InertiaJS", "MySQL"],
+    "category": "web",
     "href": "https://dilgbohol.com/",
     "cover": "/DILG IS.png"
   },
     {
-    "title": "Push To Start",
-    "blurb": "A web platform built with Wix that showcases AutoCAD automation tools and workflows.",
-    "tags": ["Wix", "Web Design", "SEO"],
-    "href": "https://www.pushtostart.net/",
-    "cover": "/pushtostart.png"
-  }
+    "title": "Portfolio Website",
+    "blurb": "Modern responsive portfolio built with React, Tailwind, and JSON data. Features smooth animations, dark mode, and easy content management.",
+    "tags": ["React", "Tailwind", "JSON"],
+    "category": "web",
+    "href": "https://vince-deguma-resume.vercel.app/",
+    "cover": "/Portfolio Thumbnail.png"
+  },
+  {
+    "title": "",
+    "blurb": "",
+    "tags": ["Photoshop"],
+    "category": "design",
+    "cover": "/Thumbnails/chrome.png"
+  },
+    {
+    "title": "",
+    "blurb": "",
+    "tags": ["Photoshop"],
+    "category": "design",
+    "cover": "/Thumbnails/tg aviator.png"
+  },
+    {
+    "title": "",
+    "blurb": "",
+    "tags": ["Photoshop"],
+    "category": "design",
+    "cover": "/Thumbnails/ig not available.png"
+  },
+    {
+    "title": "",
+    "blurb": "",
+    "tags": ["Photoshop"],
+    "category": "design",
+    "cover": "/Thumbnails/FIX.png"
+  },
+  {
+    "title": "",
+    "blurb": "High-converting ad video with motion graphics.",
+    "tags": ["Capcut", "Dreamface"],
+    "category": "video",
+    "cover": "/Videos/Moringa1.mp4"
+ },
+   {
+    "title": "",
+    "blurb": "High-converting ad video with motion graphics.",
+    "tags": ["Capcut", "Dreamface"],
+    "category": "video",
+    "cover": "/Videos/Docs1.mp4"
+ },
+   {
+    "title": "",
+    "blurb": "High-converting ad video with motion graphics.",
+    "tags": ["Capcut", "Dreamface"],
+    "category": "video",
+    "cover": "/Videos/SkinTheory 1.mp4"
+  },
+   {
+    "title": "",
+    "blurb": "High-converting ad video with motion graphics.",
+    "tags": ["Capcut", "Dreamface"],
+    "category": "video",
+    "cover": "/Videos/Claru1.mp4"
+ },
+   {
+    "title": "",
+    "blurb": "High-converting ad video with motion graphics.",
+    "tags": ["Capcut", "Dreamface"],
+    "category": "video",
+    "cover": "/Videos/SD1.mp4"
+ },
+   {
+    "title": "",
+    "blurb": "High-converting ad video with motion graphics.",
+    "tags": ["Capcut", "Dreamface"],
+    "category": "video",
+    "cover": "/Videos/S1.mp4"
+ },
+   {
+    "title": "",
+    "blurb": "High-converting ad video with motion graphics.",
+    "tags": ["Capcut", "Dreamface"],
+    "category": "video",
+    "cover": "/Videos/S2.mp4"
+ },
+   {
+    "title": "",
+    "blurb": "High-converting ad video with motion graphics.",
+    "tags": ["Capcut", "Dreamface"],
+    "category": "video",
+    "cover": "/Videos/Firstday.mp4"
+ },
+   {
+    "title": "",
+    "blurb": "High-converting ad video with motion graphics.",
+    "tags": ["Capcut", "Dreamface"],
+    "category": "video",
+    "cover": "/Videos/Oats.mp4"
+ }
 ]

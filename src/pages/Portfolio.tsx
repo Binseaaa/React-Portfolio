@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { ExternalLink } from "lucide-react";
 import projects from "../jsons/projects.json";
@@ -12,6 +12,7 @@ type Project = {
   title: string;
   blurb: string;
   tags: string[];
+  category: "video" | "web" | "design";
   href?: string;
   cover?: string;
 };
@@ -51,6 +52,7 @@ const ProjectCard: React.FC<{ p: Project }> = ({ p }) => (
       )}
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-emerald-950/50 via-transparent to-transparent" />
     </div>
+
     <div className="space-y-3 p-5">
       <div className="flex items-start justify-between gap-4">
         <h3 className="text-lg font-semibold text-emerald-900 dark:text-emerald-100">
@@ -58,9 +60,11 @@ const ProjectCard: React.FC<{ p: Project }> = ({ p }) => (
         </h3>
         <ExternalLink className="h-4 w-4 text-emerald-700 opacity-0 transition group-hover:opacity-100 dark:text-emerald-300" />
       </div>
+
       <p className="text-sm text-emerald-900/80 dark:text-emerald-100/80">
         {p.blurb}
       </p>
+
       <div className="flex flex-wrap gap-2">
         {p.tags.map((t) => (
           <Badge key={t}>{t}</Badge>
@@ -70,12 +74,40 @@ const ProjectCard: React.FC<{ p: Project }> = ({ p }) => (
   </motion.a>
 );
 
+const VideoCard: React.FC<{ p: Project }> = ({ p }) => (
+  <div className="group relative overflow-hidden rounded-2xl bg-black shadow-lg">
+    <video
+      src={p.cover}
+      className="w-full h-full object-cover aspect-[9/16] transition-transform duration-300 group-hover:scale-105"
+      autoPlay
+      loop
+      muted
+      playsInline
+      controls
+    />
+
+    {/* Overlay */}
+    <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/70 to-transparent pointer-events-none">
+      <h3 className="text-white text-sm font-semibold">{p.title}</h3>
+    </div>
+  </div>
+);
+
+const DesignCard: React.FC<{ p: Project }> = ({ p }) => (
+  <div className="mb-4 break-inside-avoid overflow-hidden rounded-2xl bg-black shadow-lg">
+    <img
+      src={p.cover}
+      alt={p.title}
+      className="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-105"
+    />
+  </div>
+);
+
 const Divider = () => (
   <div className="mx-auto my-10 h-px w-32 bg-gradient-to-r from-transparent via-emerald-400 to-transparent opacity-60" />
 );
 
 const Portfolio: React.FC = () => {
-  // Parallax dots (pure CSS background)
   const bgGrid = useMemo(
     () => ({
       backgroundImage:
@@ -86,53 +118,96 @@ const Portfolio: React.FC = () => {
     []
   );
 
+  // ✅ Tabs state
+  const [activeTab, setActiveTab] = useState<
+    "video" | "web" | "design"
+  >("video");
+
+  // ✅ Type-safe projects
+  const typedProjects = projects as Project[];
+
+  // ✅ Filtered projects (FIXED: add dependency)
+  const videoProjects = useMemo(
+    () => typedProjects.filter((p) => p.category === "video"),
+    [typedProjects]
+  );
+
+  const webProjects = useMemo(
+    () => typedProjects.filter((p) => p.category === "web"),
+    [typedProjects]
+  );
+
+  const designProjects = useMemo(
+    () => typedProjects.filter((p) => p.category === "design"),
+    [typedProjects]
+  );
+
+  // ✅ Current projects (SINGLE SOURCE OF TRUTH)
+  const currentProjects = useMemo(() => {
+    if (activeTab === "video") return videoProjects;
+    if (activeTab === "web") return webProjects;
+    return designProjects;
+  }, [activeTab, videoProjects, webProjects, designProjects]);
+
   return (
     <div
       className="min-h-screen bg-gradient-to-b from-emerald-50 via-white to-emerald-50 text-emerald-950 dark:from-[#04150e] dark:via-[#061b12] dark:to-[#03120b] dark:text-emerald-100"
       style={bgGrid}
     >
-      {/* Header */}
       <Header />
-
-      {/* Hero */}
       <Hero />
 
-      {/* About */}
-      <Section id="about" className="">
-        <div className="mx-auto max-w-3xl text-center">
-          <h2 className="text-3xl font-bold">About Me</h2>
-          <Divider />
-          <p className="text-emerald-900/80 dark:text-emerald-100/80">
-            I am a Web Developer, Video Editor, and Graphic Designer with 2
-            years of freelance experience and full-stack development background
-            from my internship at DILG Bohol. I create web applications,
-            engaging video content, and graphic designs, focusing on delivering
-            efficient and user-friendly digital solutions.
-          </p>
-        </div>
-      </Section>
-
       {/* Projects */}
-      <Section
-        id="projects"
-        className="bg-emerald-50/50 dark:bg-emerald-950/30"
-      >
+      <Section id="projects" className="bg-emerald-50/50 dark:bg-emerald-950/30">
         <h2 className="text-center text-3xl font-bold">Projects</h2>
         <Divider />
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {projects.map((p) => (
-            <ProjectCard key={p.title} p={p} />
+
+        {/* Tabs */}
+        <div className="flex justify-center gap-3 mb-10 flex-wrap">
+          {[
+            { key: "video", label: "Video Editing 🎬" },
+            { key: "web", label: "Web Development 💻" },
+            { key: "design", label: "Graphic Design 🎨" },
+          ].map((tab) => (
+            <button
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key as any)}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition border
+                ${
+                  activeTab === tab.key
+                    ? "bg-emerald-500 text-white border-emerald-500"
+                    : "bg-white/40 dark:bg-emerald-900/30 border-emerald-200 dark:border-emerald-700 text-emerald-900 dark:text-emerald-100"
+                }`}
+            >
+              {tab.label}
+            </button>
           ))}
+        </div>
+
+        {/* Grid */}
+          <div
+            className={`grid gap-4 ${
+              activeTab === "video"
+                ? "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"
+                : activeTab === "design"
+                ? "grid-cols-2 sm:grid-cols-3 lg:grid-cols-3"
+                : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+            }`}
+          >
+          {currentProjects.map((p, i) =>
+            activeTab === "video" ? (
+              <VideoCard key={`video-${p.title}-${i}`} p={p} />
+            ) : activeTab === "design" ? (
+              <DesignCard key={`design-${p.title}-${i}`} p={p} />
+            ) : (
+              <ProjectCard key={`card-${p.title}-${i}`} p={p} />
+            )
+          )}
         </div>
       </Section>
 
-      {/* Skills */}
       <Skills />
-
-      {/* Contact */}
       <Contact />
-
-      {/* Footer */}
       <Footer />
     </div>
   );
