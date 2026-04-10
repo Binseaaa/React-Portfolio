@@ -1,4 +1,4 @@
-import React, { useMemo} from "react";
+import React, { useMemo,useState } from "react";
 import { motion } from "framer-motion";
 import { ExternalLink } from "lucide-react";
 import projects from "../jsons/projects.json";
@@ -15,6 +15,7 @@ type Project = {
   category: "video" | "web" | "design";
   href?: string;
   cover?: string;
+  video?: string; 
 };
 
 const Section: React.FC<{
@@ -74,24 +75,40 @@ const ProjectCard: React.FC<{ p: Project }> = ({ p }) => (
   </motion.a>
 );
 
-const VideoCard: React.FC<{ p: Project }> = ({ p }) => (
-  <div className="group relative overflow-hidden rounded-2xl bg-black shadow-lg">
-    <video
-      src={p.cover}
-      className="w-full h-full object-cover aspect-[9/16] transition-transform duration-300 group-hover:scale-105"
-      autoPlay
-      loop
-      muted
-      playsInline
-      controls
-    />
+const VideoCard: React.FC<{ p: Project }> = ({ p }) => {
+  const [hovered, setHovered] = useState(false);
 
-    {/* Overlay */}
-    <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/70 to-transparent pointer-events-none">
-      <h3 className="text-white text-sm font-semibold">{p.title}</h3>
+  return (
+    <div
+      className="group relative overflow-hidden rounded-2xl bg-black shadow-lg"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      {/* Thumbnail FIRST (fast load) */}
+      {!hovered ? (
+        <img
+          src={p.cover} // use thumbnail image here
+          className="w-full aspect-[9/16] object-cover transition-transform duration-300 group-hover:scale-105"
+          loading="lazy"
+        />
+      ) : (
+        // Video ONLY loads on hover
+        <video
+          src={p.video} // IMPORTANT: separate field from cover
+          className="w-full aspect-[9/16] object-cover"
+          autoPlay
+          muted
+          loop
+          playsInline
+        />
+      )}
+
+      <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/70 to-transparent">
+        <h3 className="text-white text-sm font-semibold">{p.title}</h3>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const DesignCard: React.FC<{ p: Project }> = ({ p }) => (
   <div className="mb-4 break-inside-avoid overflow-hidden rounded-2xl bg-black shadow-lg">
