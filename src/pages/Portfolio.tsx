@@ -12,7 +12,7 @@ type Project = {
   title: string;
   blurb: string;
   tags: string[];
-  category: "video" | "web" | "design";
+  category: "video" | "web";
   href?: string;
   cover?: string;
   video?: string; 
@@ -110,16 +110,6 @@ const VideoCard: React.FC<{ p: Project }> = ({ p }) => {
   );
 };
 
-const DesignCard: React.FC<{ p: Project }> = ({ p }) => (
-  <div className="mb-4 break-inside-avoid overflow-hidden rounded-2xl bg-black shadow-lg">
-    <img
-      src={p.cover}
-      alt={p.title}
-      className="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-105"
-    />
-  </div>
-);
-
 const Divider = () => (
   <div className="mx-auto my-10 h-px w-32 bg-gradient-to-r from-transparent via-emerald-400 to-transparent opacity-60" />
 );
@@ -146,11 +136,6 @@ const Portfolio: React.FC = () => {
 
   const webProjects = useMemo(
     () => typedProjects.filter((p) => p.category === "web"),
-    [typedProjects]
-  );
-
-  const designProjects = useMemo(
-    () => typedProjects.filter((p) => p.category === "design"),
     [typedProjects]
   );
 
@@ -186,14 +171,6 @@ const Portfolio: React.FC = () => {
         </div>
 
         <Divider />
-
-        {/* DESIGN */}
-        <h3 className="text-xl font-semibold text-center mb-6">Graphic Design 🎨</h3>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-4">
-          {designProjects.map((p, i) => (
-            <DesignCard key={`design-${p.title}-${i}`} p={p} />
-          ))}
-        </div>
       </Section>
 
       <Skills />
