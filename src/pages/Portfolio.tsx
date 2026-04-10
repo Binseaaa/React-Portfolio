@@ -15,7 +15,6 @@ type Project = {
   category: "video" | "web" | "design";
   href?: string;
   cover?: string;
-  video?: string; // ✅ ADD THIS
 };
 
 const Section: React.FC<{
@@ -43,13 +42,11 @@ const ProjectCard: React.FC<{ p: Project }> = ({ p }) => (
   >
     <div className="relative h-48 w-full overflow-hidden">
       {p.cover ? (
-      <img
-        src={p.cover}
-        loading="lazy"
-        decoding="async"
-        fetchPriority="low"
-        className="w-full h-auto object-cover"
-      />
+        <img
+          src={p.cover}
+          alt={p.title}
+          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
       ) : (
         <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-emerald-200 to-emerald-100 dark:from-emerald-800 dark:to-emerald-700" />
       )}
@@ -80,18 +77,16 @@ const ProjectCard: React.FC<{ p: Project }> = ({ p }) => (
 const VideoCard: React.FC<{ p: Project }> = ({ p }) => (
   <div className="group relative overflow-hidden rounded-2xl bg-black shadow-lg">
     <video
-      src={p.video}
-      poster={p.cover}
-      preload="metadata"
-      muted
+      src={p.cover}
+      className="w-full h-full object-cover aspect-[9/16] transition-transform duration-300 group-hover:scale-105"
+      autoPlay
       loop
+      muted
       playsInline
-      className="w-full h-full object-cover"
+      controls
     />
 
-    {/* Optional play indicator (better UX) */}
-    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition" />
-
+    {/* Overlay */}
     <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/70 to-transparent pointer-events-none">
       <h3 className="text-white text-sm font-semibold">{p.title}</h3>
     </div>
@@ -99,12 +94,10 @@ const VideoCard: React.FC<{ p: Project }> = ({ p }) => (
 );
 
 const DesignCard: React.FC<{ p: Project }> = ({ p }) => (
-  <div className="mb-4 break-inside-avoid overflow-hidden rounded-2xl bg-black shadow-lg group">
+  <div className="mb-4 break-inside-avoid overflow-hidden rounded-2xl bg-black shadow-lg">
     <img
       src={p.cover}
       alt={p.title}
-      loading="lazy"
-      decoding="async"
       className="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-105"
     />
   </div>
@@ -125,11 +118,6 @@ const Portfolio: React.FC = () => {
     []
   );
 
-  // ✅ Tabs state
-  const [activeTab, setActiveTab] = useState<
-    "video" | "web" | "design"
-  >("video");
-
   // ✅ Type-safe projects
   const typedProjects = projects as Project[];
 
@@ -149,20 +137,6 @@ const Portfolio: React.FC = () => {
     [typedProjects]
   );
 
-  // ✅ Current projects (SINGLE SOURCE OF TRUTH)
-  const currentProjects = useMemo(() => {
-    switch (activeTab) {
-      case "video":
-        return videoProjects;
-      case "web":
-        return webProjects;
-      case "design":
-        return designProjects;
-      default:
-        return [];
-    }
-  }, [activeTab, videoProjects, webProjects, designProjects]);
-
   return (
     <div
       className="min-h-screen bg-gradient-to-b from-emerald-50 via-white to-emerald-50 text-emerald-950 dark:from-[#04150e] dark:via-[#061b12] dark:to-[#03120b] dark:text-emerald-100"
@@ -176,47 +150,32 @@ const Portfolio: React.FC = () => {
         <h2 className="text-center text-3xl font-bold">Projects</h2>
         <Divider />
 
-        {/* Tabs */}
-        <div className="flex justify-center gap-3 mb-10 flex-wrap">
-          {[
-            { key: "video", label: "Video Editing 🎬" },
-            { key: "web", label: "Web Development 💻" },
-            { key: "design", label: "Graphic Design 🎨" },
-          ].map((tab) => (
-            <button
-              key={tab.key}
-              onClick={() => setActiveTab(tab.key as any)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition border
-                ${
-                  activeTab === tab.key
-                    ? "bg-emerald-500 text-white border-emerald-500"
-                    : "bg-white/40 dark:bg-emerald-900/30 border-emerald-200 dark:border-emerald-700 text-emerald-900 dark:text-emerald-100"
-                }`}
-            >
-              {tab.label}
-            </button>
+        {/* VIDEO */}
+        <h3 className="text-xl font-semibold text-center mb-6">Video Editing 🎬</h3>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-16">
+          {videoProjects.map((p, i) => (
+            <VideoCard key={`video-${p.title}-${i}`} p={p} />
           ))}
         </div>
 
-        {/* Grid */}
-          <div
-              className={`grid gap-4 ${
-                activeTab === "video"
-                  ? "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"
-                  : activeTab === "design"
-                  ? "grid-cols-2 sm:grid-cols-3 lg:grid-cols-3"
-                  : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
-              }`}
-            >
-          {currentProjects.map((p, i) =>
-            activeTab === "video" ? (
-              <VideoCard key={`video-${p.title}-${i}`} p={p} />
-            ) : activeTab === "design" ? (
-              <DesignCard key={`design-${p.title}-${i}`} p={p} />
-            ) : (
-              <ProjectCard key={`card-${p.title}-${i}`} p={p} />
-            )
-          )}
+        <Divider />
+
+        {/* WEB */}
+        <h3 className="text-xl font-semibold text-center mb-6">Web Development 💻</h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-16">
+          {webProjects.map((p, i) => (
+            <ProjectCard key={`web-${p.title}-${i}`} p={p} />
+          ))}
+        </div>
+
+        <Divider />
+
+        {/* DESIGN */}
+        <h3 className="text-xl font-semibold text-center mb-6">Graphic Design 🎨</h3>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-4">
+          {designProjects.map((p, i) => (
+            <DesignCard key={`design-${p.title}-${i}`} p={p} />
+          ))}
         </div>
       </Section>
 
