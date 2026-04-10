@@ -102,14 +102,13 @@ const ProjectCard: React.FC<{ p: Project }> = ({ p }) => (
           ref={videoRef}
           src={p.cover}
           className="w-full aspect-[9/16] object-cover"
-          muted
           playsInline
           preload="metadata"
         />
       </div>
     );
   };
-  
+
 const Divider = () => (
   <div className="mx-auto my-10 h-px w-32 bg-gradient-to-r from-transparent via-emerald-400 to-transparent opacity-60" />
 );
