@@ -1,4 +1,4 @@
-import React, { useMemo} from "react";
+import React, { useMemo } from "react";
 import { motion } from "framer-motion";
 import { ExternalLink } from "lucide-react";
 import projects from "../jsons/projects.json";
@@ -23,7 +23,9 @@ const Section: React.FC<{
   children: React.ReactNode;
 }> = ({ id, className, children }) => (
   <section id={id} className={`py-20 ${className ?? ""}`}>
-    <div className="mx-auto w-full max-w-7xl px-6 lg:px-8">{children}</div>
+    <div className="mx-auto w-full max-w-7xl px-6 lg:px-8">
+      {children}
+    </div>
   </section>
 );
 
@@ -78,7 +80,7 @@ const VideoCard: React.FC<{ p: Project }> = ({ p }) => (
   <div className="group relative overflow-hidden rounded-2xl bg-black shadow-lg">
     <video
       src={p.cover}
-      className="w-full h-full object-cover aspect-[9/16] transition-transform duration-300 group-hover:scale-105"
+      className="w-full aspect-[9/16] object-cover transition-transform duration-300 group-hover:scale-105"
       autoPlay
       loop
       muted
@@ -86,7 +88,6 @@ const VideoCard: React.FC<{ p: Project }> = ({ p }) => (
       controls
     />
 
-    {/* Overlay */}
     <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/70 to-transparent pointer-events-none">
       <h3 className="text-white text-sm font-semibold">{p.title}</h3>
     </div>
@@ -108,10 +109,9 @@ const Portfolio: React.FC = () => {
     []
   );
 
-  // ✅ Type-safe projects
-  const typedProjects = projects as Project[];
+  // SAFE fallback (important for Vercel crashes)
+  const typedProjects: Project[] = (projects as Project[]) ?? [];
 
-  // ✅ Filtered projects (FIXED: add dependency)
   const videoProjects = useMemo(
     () => typedProjects.filter((p) => p.category === "video"),
     [typedProjects]
@@ -130,13 +130,14 @@ const Portfolio: React.FC = () => {
       <Header />
       <Hero />
 
-      {/* Projects */}
       <Section id="projects" className="bg-emerald-50/50 dark:bg-emerald-950/30">
         <h2 className="text-center text-3xl font-bold">Projects</h2>
         <Divider />
 
         {/* VIDEO */}
-        <h3 className="text-xl font-semibold text-center mb-6">Video Editing 🎬</h3>
+        <h3 className="text-xl font-semibold text-center mb-6">
+          Video Editing 🎬
+        </h3>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-16">
           {videoProjects.map((p, i) => (
             <VideoCard key={`video-${p.title}-${i}`} p={p} />
@@ -146,14 +147,14 @@ const Portfolio: React.FC = () => {
         <Divider />
 
         {/* WEB */}
-        <h3 className="text-xl font-semibold text-center mb-6">Web Development 💻</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-16">
+        <h3 className="text-xl font-semibold text-center mb-6">
+          Web Development 💻
+        </h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {webProjects.map((p, i) => (
             <ProjectCard key={`web-${p.title}-${i}`} p={p} />
           ))}
         </div>
-
-        <Divider />
       </Section>
 
       <Skills />
