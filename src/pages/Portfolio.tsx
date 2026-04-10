@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo} from "react";
 import { motion } from "framer-motion";
 import { ExternalLink } from "lucide-react";
 import projects from "../jsons/projects.json";
