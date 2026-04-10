@@ -76,24 +76,40 @@ const ProjectCard: React.FC<{ p: Project }> = ({ p }) => (
   </motion.a>
 );
 
-const VideoCard: React.FC<{ p: Project }> = ({ p }) => (
-  <div className="group relative overflow-hidden rounded-2xl bg-black shadow-lg">
-    <video
-      src={p.cover}
-      className="w-full aspect-[9/16] object-cover transition-transform duration-300 group-hover:scale-105"
-      autoPlay
-      loop
-      muted
-      playsInline
-      controls
-    />
+  const VideoCard: React.FC<{ p: Project }> = ({ p }) => {
+    const videoRef = React.useRef<HTMLVideoElement | null>(null);
 
-    <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/70 to-transparent pointer-events-none">
-      <h3 className="text-white text-sm font-semibold">{p.title}</h3>
-    </div>
-  </div>
-);
+    const handleEnter = () => {
+      if (videoRef.current) {
+        videoRef.current.play();
+      }
+    };
 
+    const handleLeave = () => {
+      if (videoRef.current) {
+        videoRef.current.pause();
+        videoRef.current.currentTime = 0;
+      }
+    };
+
+    return (
+      <div
+        className="group relative overflow-hidden rounded-2xl shadow-lg"
+        onMouseEnter={handleEnter}
+        onMouseLeave={handleLeave}
+      >
+        <video
+          ref={videoRef}
+          src={p.cover}
+          className="w-full aspect-[9/16] object-cover"
+          muted
+          playsInline
+          preload="metadata"
+        />
+      </div>
+    );
+  };
+  
 const Divider = () => (
   <div className="mx-auto my-10 h-px w-32 bg-gradient-to-r from-transparent via-emerald-400 to-transparent opacity-60" />
 );
