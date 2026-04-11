@@ -52,6 +52,16 @@ const WordCarousel: React.FC = () => {
   );
 };
 
+const scrollToSection = (id: string) => {
+  const el = document.getElementById(id);
+  if (!el) return;
+
+  el.scrollIntoView({
+    behavior: "smooth",
+    block: "start",
+  });
+};
+
 const Hero: React.FC = () => (
   <Section id="home" className="relative overflow-hidden pt-32">
     {/* big soft spotlight */}
@@ -63,9 +73,9 @@ const Hero: React.FC = () => (
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.6 }}
-          className="mb-6 flex flex-col text-6xl md:text-7xl font-extrabold tracking-tight"
+          className="mb-6 flex flex-col font-extrabold tracking-tight text-4xl sm:text-5xl md:text-7xl leading-tight"
         >
-          <div className="flex gap-4">
+          <div className="flex gap-4 items-center justify-center w-full translate-x-5 sm:translate-x-0">
             <span className="text-emerald-900 dark:text-emerald-50">
               Crafting
             </span>
@@ -98,7 +108,7 @@ const Hero: React.FC = () => (
           </span>
         </motion.p>
 
-        <div className="flex flex-wrap items-center gap-4">
+        <div className="flex flex-wrap items-center gap-4 justify-center md:justify-start">
           <a
             href="#projects"
             onClick={scrollToId("projects", 96)} // adjust offset to your header height
@@ -106,15 +116,15 @@ const Hero: React.FC = () => (
           >
             See my work <ArrowRight className="h-4 w-4" />
           </a>
-          <a
-            href="#contact"
-            className="inline-flex items-center gap-2 rounded-2xl border border-emerald-300 bg-white/50 px-6 py-3 font-semibold text-emerald-800 shadow-sm backdrop-blur transition hover:bg-white dark:border-emerald-700/40 dark:bg-emerald-900/40 dark:text-emerald-100"
+          <button
+            onClick={() => scrollToSection("contact")}
+            className="cursor-pointer inline-flex items-center gap-2 rounded-2xl border border-emerald-300 bg-white/50 px-6 py-3 font-semibold text-emerald-800 shadow-sm backdrop-blur transition hover:bg-white dark:border-emerald-700/40 dark:bg-emerald-900/40 dark:text-emerald-100 "
           >
             Contact
-          </a>
+          </button>
           <div className="mt-10 grid grid-cols-3 gap-8 max-w-lg mx-auto md:mx-0">
             <div>
-              <p className="text-3xl font-bold text-emerald-700 dark:text-emerald-300">
+              <p className="text-2xl font-bold text-emerald-700 dark:text-emerald-300">
                 2+
               </p>
               <p className="text-sm text-emerald-900/70 dark:text-emerald-100/70">
@@ -132,7 +142,7 @@ const Hero: React.FC = () => (
             </div>
 
             <div>
-              <p className="text-3xl font-bold text-emerald-700 dark:text-emerald-300">
+              <p className="text-2xl font-bold text-emerald-700 dark:text-emerald-300">
                 4
               </p>
               <p className="text-xs text-emerald-900/70 dark:text-emerald-100/70">
