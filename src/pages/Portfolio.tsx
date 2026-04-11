@@ -77,62 +77,75 @@ const ProjectCard: React.FC<{ p: Project }> = ({ p }) => (
 );
 
 import { Play, Pause } from "lucide-react";
-
-const VideoCard: React.FC<{ p: Project }> = ({ p }) => {
+const VideoCard: React.FC<{
+  p: Project;
+  isActive: boolean;
+  onActivate: () => void;
+}> = ({ p, isActive, onActivate }) => {
   const videoRef = React.useRef<HTMLVideoElement | null>(null);
   const [isPlaying, setIsPlaying] = React.useState(false);
   const [progress, setProgress] = React.useState(0);
 
-  const handleEnter = () => {
-    if (videoRef.current) {
-      videoRef.current.play();
-      setIsPlaying(true);
-    }
-  };
+  // SAFE autoplay preview
+  React.useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
 
-  const handleLeave = () => {
-    if (videoRef.current) {
-      videoRef.current.pause();
-      videoRef.current.currentTime = 0;
-      setIsPlaying(false);
-      setProgress(0);
-    }
-  };
+    video.muted = !isActive;
 
+    const playPromise = video.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {});
+    }
+
+    const interval = setInterval(() => {
+      if (!isActive && video.currentTime >= 5) {
+        video.currentTime = 0;
+      }
+    }, 300);
+
+    return () => clearInterval(interval);
+  }, [isActive]);
+
+  // Handle play/pause + activate
   const togglePlay = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!videoRef.current) return;
+    const video = videoRef.current;
+    if (!video) return;
+
+    onActivate(); // 👈 THIS switches audio between videos
 
     if (isPlaying) {
-      videoRef.current.pause();
+      video.pause();
       setIsPlaying(false);
     } else {
-      videoRef.current.play();
+      video.muted = false;
+      video.play();
       setIsPlaying(true);
     }
   };
 
   const handleTimeUpdate = () => {
-    if (!videoRef.current) return;
-    const current = videoRef.current.currentTime;
-    const duration = videoRef.current.duration || 1;
-    setProgress((current / duration) * 100);
+    const video = videoRef.current;
+    if (!video) return;
+
+    const duration = video.duration || 1;
+    setProgress((video.currentTime / duration) * 100);
   };
 
   const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!videoRef.current) return;
+    const video = videoRef.current;
+    if (!video) return;
+
     const value = Number(e.target.value);
-    const duration = videoRef.current.duration || 1;
-    videoRef.current.currentTime = (value / 100) * duration;
+    const duration = video.duration || 1;
+
+    video.currentTime = (value / 100) * duration;
     setProgress(value);
   };
 
   return (
-    <div
-      className="group relative overflow-hidden rounded-2xl shadow-lg bg-black"
-      onMouseEnter={handleEnter}
-      onMouseLeave={handleLeave}
-    >
+    <div className="relative overflow-hidden rounded-2xl shadow-lg bg-black">
       <video
         ref={videoRef}
         src={p.cover}
@@ -142,26 +155,26 @@ const VideoCard: React.FC<{ p: Project }> = ({ p }) => {
         onTimeUpdate={handleTimeUpdate}
       />
 
-  {/* CENTER PLAY/PAUSE */}
-  <button
-    onClick={togglePlay}
-    className="absolute inset-0 flex items-center justify-center z-10"
-  >
-    <div
-      className={`
-        flex items-center justify-center
-        bg-black/50 backdrop-blur-md p-4 rounded-full
-        transition-all
-        ${isPlaying ? "opacity-0 scale-75 pointer-events-none" : "opacity-100 scale-100"}
-      `}
-    >
-      {isPlaying ? (
-        <Pause className="w-6 h-6 text-white" />
-      ) : (
-        <Play className="w-6 h-6 text-white" />
-      )}
-    </div>
-  </button>
+      {/* CENTER BUTTON */}
+      <button
+        onClick={togglePlay}
+        className="absolute inset-0 flex items-center justify-center z-10"
+      >
+        <div
+          className={`
+            flex items-center justify-center
+            bg-black/50 backdrop-blur-md p-4 rounded-full
+            transition-all
+            ${isPlaying ? "opacity-0 scale-75" : "opacity-100 scale-100"}
+          `}
+        >
+          {isPlaying ? (
+            <Pause className="w-6 h-6 text-white" />
+          ) : (
+            <Play className="w-6 h-6 text-white" />
+          )}
+        </div>
+      </button>
 
       {/* PROGRESS BAR */}
       <input
@@ -178,12 +191,13 @@ const VideoCard: React.FC<{ p: Project }> = ({ p }) => {
     </div>
   );
 };
-
 const Divider = () => (
   <div className="mx-auto my-10 h-px w-32 bg-gradient-to-r from-transparent via-emerald-400 to-transparent opacity-60" />
 );
 
 const Portfolio: React.FC = () => {
+  const [activeIndex, setActiveIndex] = React.useState<number | null>(null);
+
   const bgGrid = useMemo(
     () => ({
       backgroundImage:
@@ -224,9 +238,14 @@ const Portfolio: React.FC = () => {
           Video Editing 🎬
         </h3>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-16">
-          {videoProjects.map((p, i) => (
-            <VideoCard key={`video-${p.title}-${i}`} p={p} />
-          ))}
+            {videoProjects.map((p, i) => (
+              <VideoCard
+                key={`video-${p.title}-${i}`}
+                p={p}
+                isActive={activeIndex === i}
+                onActivate={() => setActiveIndex(i)}
+              />
+            ))}
         </div>
 
         <Divider />
