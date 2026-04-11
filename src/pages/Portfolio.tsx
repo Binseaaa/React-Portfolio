@@ -76,7 +76,9 @@ const ProjectCard: React.FC<{ p: Project }> = ({ p }) => (
   </motion.a>
 );
 
-  const VideoCard: React.FC<{ p: Project }> = ({ p }) => {
+import { Play, Pause } from "lucide-react";
+
+const VideoCard: React.FC<{ p: Project }> = ({ p }) => {
   const videoRef = React.useRef<HTMLVideoElement | null>(null);
   const [isPlaying, setIsPlaying] = React.useState(false);
   const [progress, setProgress] = React.useState(0);
@@ -140,25 +142,38 @@ const ProjectCard: React.FC<{ p: Project }> = ({ p }) => (
         onTimeUpdate={handleTimeUpdate}
       />
 
-      {/* Play/Pause Button */}
-      <button
-        onClick={togglePlay}
-        className="absolute bottom-10 left-3 z-10 bg-black/60 text-white px-3 py-1 rounded-md text-xs"
-      >
-        {isPlaying ? "Pause" : "Play"}
-      </button>
+  {/* CENTER PLAY/PAUSE */}
+  <button
+    onClick={togglePlay}
+    className="absolute inset-0 flex items-center justify-center z-10"
+  >
+    <div
+      className={`
+        flex items-center justify-center
+        bg-black/50 backdrop-blur-md p-4 rounded-full
+        transition-all
+        ${isPlaying ? "opacity-0 scale-75 pointer-events-none" : "opacity-100 scale-100"}
+      `}
+    >
+      {isPlaying ? (
+        <Pause className="w-6 h-6 text-white" />
+      ) : (
+        <Play className="w-6 h-6 text-white" />
+      )}
+    </div>
+  </button>
 
-      {/* Progress Bar */}
+      {/* PROGRESS BAR */}
       <input
         type="range"
         min="0"
         max="100"
         value={progress}
         onChange={handleSeek}
-        className="absolute bottom-2 left-2 right-2 z-10 w-[calc(100%-1rem)]"
+        className="absolute bottom-2 left-2 right-2 z-10 w-[calc(100%-1rem)] accent-emerald-500"
       />
 
-      {/* Gradient Overlay */}
+      {/* OVERLAY */}
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
     </div>
   );
@@ -178,6 +193,12 @@ const Portfolio: React.FC = () => {
     }),
     []
   );
+
+  const [currentVideo, setCurrentVideo] = React.useState(0);
+
+  const handleNext = () => {
+    setCurrentVideo((prev) => (prev + 1) % videoProjects.length);
+  };
 
   // SAFE fallback (important for Vercel crashes)
   const typedProjects: Project[] = (projects as Project[]) ?? [];
