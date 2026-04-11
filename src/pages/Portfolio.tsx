@@ -194,12 +194,6 @@ const Portfolio: React.FC = () => {
     []
   );
 
-  const [currentVideo, setCurrentVideo] = React.useState(0);
-
-  const handleNext = () => {
-    setCurrentVideo((prev) => (prev + 1) % videoProjects.length);
-  };
-
   // SAFE fallback (important for Vercel crashes)
   const typedProjects: Project[] = (projects as Project[]) ?? [];
 
