@@ -77,37 +77,92 @@ const ProjectCard: React.FC<{ p: Project }> = ({ p }) => (
 );
 
   const VideoCard: React.FC<{ p: Project }> = ({ p }) => {
-    const videoRef = React.useRef<HTMLVideoElement | null>(null);
+  const videoRef = React.useRef<HTMLVideoElement | null>(null);
+  const [isPlaying, setIsPlaying] = React.useState(false);
+  const [progress, setProgress] = React.useState(0);
 
-    const handleEnter = () => {
-      if (videoRef.current) {
-        videoRef.current.play();
-      }
-    };
-
-    const handleLeave = () => {
-      if (videoRef.current) {
-        videoRef.current.pause();
-        videoRef.current.currentTime = 0;
-      }
-    };
-
-    return (
-      <div
-        className="group relative overflow-hidden rounded-2xl shadow-lg"
-        onMouseEnter={handleEnter}
-        onMouseLeave={handleLeave}
-      >
-        <video
-          ref={videoRef}
-          src={p.cover}
-          className="w-full aspect-[9/16] object-cover"
-          playsInline
-          preload="metadata"
-        />
-      </div>
-    );
+  const handleEnter = () => {
+    if (videoRef.current) {
+      videoRef.current.play();
+      setIsPlaying(true);
+    }
   };
+
+  const handleLeave = () => {
+    if (videoRef.current) {
+      videoRef.current.pause();
+      videoRef.current.currentTime = 0;
+      setIsPlaying(false);
+      setProgress(0);
+    }
+  };
+
+  const togglePlay = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!videoRef.current) return;
+
+    if (isPlaying) {
+      videoRef.current.pause();
+      setIsPlaying(false);
+    } else {
+      videoRef.current.play();
+      setIsPlaying(true);
+    }
+  };
+
+  const handleTimeUpdate = () => {
+    if (!videoRef.current) return;
+    const current = videoRef.current.currentTime;
+    const duration = videoRef.current.duration || 1;
+    setProgress((current / duration) * 100);
+  };
+
+  const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!videoRef.current) return;
+    const value = Number(e.target.value);
+    const duration = videoRef.current.duration || 1;
+    videoRef.current.currentTime = (value / 100) * duration;
+    setProgress(value);
+  };
+
+  return (
+    <div
+      className="group relative overflow-hidden rounded-2xl shadow-lg bg-black"
+      onMouseEnter={handleEnter}
+      onMouseLeave={handleLeave}
+    >
+      <video
+        ref={videoRef}
+        src={p.cover}
+        className="w-full aspect-[9/16] object-cover"
+        playsInline
+        preload="metadata"
+        onTimeUpdate={handleTimeUpdate}
+      />
+
+      {/* Play/Pause Button */}
+      <button
+        onClick={togglePlay}
+        className="absolute bottom-10 left-3 z-10 bg-black/60 text-white px-3 py-1 rounded-md text-xs"
+      >
+        {isPlaying ? "Pause" : "Play"}
+      </button>
+
+      {/* Progress Bar */}
+      <input
+        type="range"
+        min="0"
+        max="100"
+        value={progress}
+        onChange={handleSeek}
+        className="absolute bottom-2 left-2 right-2 z-10 w-[calc(100%-1rem)]"
+      />
+
+      {/* Gradient Overlay */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+    </div>
+  );
+};
 
 const Divider = () => (
   <div className="mx-auto my-10 h-px w-32 bg-gradient-to-r from-transparent via-emerald-400 to-transparent opacity-60" />
