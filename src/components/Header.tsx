@@ -78,7 +78,10 @@ const Header: React.FC = () => {
           <button
             aria-label="Toggle theme"
             onClick={toggle}
-            className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-white/60 px-3 py-1.5 text-emerald-800 shadow backdrop-blur transition hover:bg-white md:px-4 dark:border-emerald-700/40 dark:bg-emerald-900/40 dark:text-emerald-100"
+            className="hover:bg-white hover:shadow-md hover:border-emerald-300/70 
+             focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/60 focus-visible:ring-offset-2 focus-visible:ring-offset-white 
+             dark:border-emerald-700/50 dark:bg-emerald-900/40 dark:text-emerald-50 
+             dark:hover:bg-emerald-900/55 dark:hover:border-emerald-600/60 cursor-pointer inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-white/60 px-3 py-1.5 text-emerald-800 shadow backdrop-blur transition hover:bg-white md:px-4 dark:border-emerald-700/40 dark:bg-emerald-900/40 dark:text-emerald-100"
           >
             {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             <span className="hidden text-xs md:inline">

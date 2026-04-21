@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { motion } from "framer-motion";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Play, Pause } from "lucide-react";
 import projects from "../jsons/projects.json";
 import Contact from "../components/Contact";
 import Footer from "../components/Footer";
@@ -17,30 +17,51 @@ type Project = {
   cover?: string;
 };
 
+// ── animation presets ────────────────────────────────────────────────────────
+const fadeUp = {
+  hidden: { opacity: 0, y: 24 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: "easeOut" as const } },
+};
+
+const stagger = (delayChildren = 0.08) => ({
+  hidden: {},
+  show: { transition: { staggerChildren: delayChildren } },
+});
+
+// ── Section ──────────────────────────────────────────────────────────────────
 const Section: React.FC<{
   id: string;
   className?: string;
   children: React.ReactNode;
 }> = ({ id, className, children }) => (
-  <section id={id} className={`py-20 ${className ?? ""}`}>
-    <div className="mx-auto w-full max-w-7xl px-6 lg:px-8">
-      {children}
-    </div>
-  </section>
+  <motion.section
+    id={id}
+    className={`py-20 ${className ?? ""}`}
+    variants={stagger()}
+    initial="hidden"
+    whileInView="show"
+    viewport={{ once: true, amount: 0.1 }}
+  >
+    <div className="mx-auto w-full max-w-7xl px-6 lg:px-8">{children}</div>
+  </motion.section>
 );
 
+// ── Badge ────────────────────────────────────────────────────────────────────
 const Badge: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <span className="rounded-full border border-emerald-200 bg-emerald-50/70 px-3 py-1 text-sm font-medium text-emerald-700 shadow-sm backdrop-blur dark:border-emerald-700/40 dark:bg-emerald-900/30 dark:text-emerald-200">
     {children}
   </span>
 );
 
+// ── ProjectCard ──────────────────────────────────────────────────────────────
 const ProjectCard: React.FC<{ p: Project }> = ({ p }) => (
   <motion.a
     href={p.href}
     target="_blank"
-    whileHover={{ y: -6 }}
-    className="group relative overflow-hidden rounded-2xl border border-emerald-200 bg-white/70 shadow-lg backdrop-blur transition dark:border-emerald-700/40 dark:bg-emerald-900/40"
+    variants={fadeUp}
+    whileHover={{ y: -6, boxShadow: "0 20px 40px -12px rgba(16,185,129,0.25)" }}
+    transition={{ type: "spring", stiffness: 260, damping: 20 }}
+    className="group relative overflow-hidden rounded-2xl border border-emerald-200 bg-white/70 shadow-lg backdrop-blur dark:border-emerald-700/40 dark:bg-emerald-900/40"
   >
     <div className="relative h-48 w-full overflow-hidden">
       {p.cover ? (
@@ -62,11 +83,9 @@ const ProjectCard: React.FC<{ p: Project }> = ({ p }) => (
         </h3>
         <ExternalLink className="h-4 w-4 text-emerald-700 opacity-0 transition group-hover:opacity-100 dark:text-emerald-300" />
       </div>
-
       <p className="text-sm text-emerald-900/80 dark:text-emerald-100/80">
         {p.blurb}
       </p>
-
       <div className="flex flex-wrap gap-2">
         {p.tags.map((t) => (
           <Badge key={t}>{t}</Badge>
@@ -76,7 +95,7 @@ const ProjectCard: React.FC<{ p: Project }> = ({ p }) => (
   </motion.a>
 );
 
-import { Play, Pause } from "lucide-react";
+// ── VideoCard ────────────────────────────────────────────────────────────────
 const VideoCard: React.FC<{
   p: Project;
   isActive: boolean;
@@ -86,35 +105,23 @@ const VideoCard: React.FC<{
   const [isPlaying, setIsPlaying] = React.useState(false);
   const [progress, setProgress] = React.useState(0);
 
-  // SAFE autoplay preview
   React.useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-
     video.muted = !isActive;
-
     const playPromise = video.play();
-    if (playPromise !== undefined) {
-      playPromise.catch(() => {});
-    }
-
+    if (playPromise !== undefined) playPromise.catch(() => {});
     const interval = setInterval(() => {
-      if (!isActive && video.currentTime >= 5) {
-        video.currentTime = 0;
-      }
+      if (!isActive && video.currentTime >= 5) video.currentTime = 0;
     }, 300);
-
     return () => clearInterval(interval);
   }, [isActive]);
 
-  // Handle play/pause + activate
   const togglePlay = (e: React.MouseEvent) => {
     e.stopPropagation();
     const video = videoRef.current;
     if (!video) return;
-
-    onActivate(); // 👈 THIS switches audio between videos
-
+    onActivate();
     if (isPlaying) {
       video.pause();
       setIsPlaying(false);
@@ -128,24 +135,24 @@ const VideoCard: React.FC<{
   const handleTimeUpdate = () => {
     const video = videoRef.current;
     if (!video) return;
-
-    const duration = video.duration || 1;
-    setProgress((video.currentTime / duration) * 100);
+    setProgress((video.currentTime / (video.duration || 1)) * 100);
   };
 
   const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
     const video = videoRef.current;
     if (!video) return;
-
     const value = Number(e.target.value);
-    const duration = video.duration || 1;
-
-    video.currentTime = (value / 100) * duration;
+    video.currentTime = (value / 100) * (video.duration || 1);
     setProgress(value);
   };
 
   return (
-    <div className="relative overflow-hidden rounded-2xl shadow-lg bg-black">
+    <motion.div
+      variants={fadeUp}
+      whileHover={{ scale: 1.03 }}
+      transition={{ type: "spring", stiffness: 280, damping: 22 }}
+      className="relative overflow-hidden rounded-2xl shadow-lg bg-black"
+    >
       <video
         ref={videoRef}
         src={p.cover}
@@ -154,19 +161,14 @@ const VideoCard: React.FC<{
         preload="metadata"
         onTimeUpdate={handleTimeUpdate}
       />
-
-      {/* CENTER BUTTON */}
       <button
         onClick={togglePlay}
         className="absolute inset-0 flex items-center justify-center z-10"
       >
         <div
-          className={`
-            flex items-center justify-center
-            bg-black/50 backdrop-blur-md p-4 rounded-full
-            transition-all
-            ${isPlaying ? "opacity-0 scale-75" : "opacity-100 scale-100"}
-          `}
+          className={`flex items-center justify-center bg-black/50 backdrop-blur-md p-4 rounded-full transition-all ${
+            isPlaying ? "opacity-0 scale-75" : "opacity-100 scale-100"
+          }`}
         >
           {isPlaying ? (
             <Pause className="w-6 h-6 text-white" />
@@ -175,8 +177,6 @@ const VideoCard: React.FC<{
           )}
         </div>
       </button>
-
-      {/* PROGRESS BAR */}
       <input
         type="range"
         min="0"
@@ -185,16 +185,42 @@ const VideoCard: React.FC<{
         onChange={handleSeek}
         className="absolute bottom-2 left-2 right-2 z-10 w-[calc(100%-1rem)] accent-emerald-500"
       />
-
-      {/* OVERLAY */}
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-    </div>
+    </motion.div>
   );
 };
+
+// ── Divider ──────────────────────────────────────────────────────────────────
 const Divider = () => (
-  <div className="mx-auto my-10 h-px w-32 bg-gradient-to-r from-transparent via-emerald-400 to-transparent opacity-60" />
+  <motion.div
+    className="mx-auto my-10 h-px w-32 bg-gradient-to-r from-transparent via-emerald-400 to-transparent opacity-60"
+    initial={{ scaleX: 0, opacity: 0 }}
+    whileInView={{ scaleX: 1, opacity: 0.6 }}
+    transition={{ duration: 0.6, ease: "easeOut" }}
+    viewport={{ once: true }}
+  />
 );
 
+// ── SectionHeading ───────────────────────────────────────────────────────────
+const SectionHeading: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <motion.h2
+    variants={fadeUp}
+    className="text-center text-3xl font-bold"
+  >
+    {children}
+  </motion.h2>
+);
+
+const SubHeading: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <motion.h3
+    variants={fadeUp}
+    className="text-xl font-semibold text-center mb-6"
+  >
+    {children}
+  </motion.h3>
+);
+
+// ── Portfolio ────────────────────────────────────────────────────────────────
 const Portfolio: React.FC = () => {
   const [activeIndex, setActiveIndex] = React.useState<number | null>(null);
 
@@ -208,14 +234,11 @@ const Portfolio: React.FC = () => {
     []
   );
 
-  // SAFE fallback (important for Vercel crashes)
   const typedProjects: Project[] = (projects as Project[]) ?? [];
-
   const videoProjects = useMemo(
     () => typedProjects.filter((p) => p.category === "video"),
     [typedProjects]
   );
-
   const webProjects = useMemo(
     () => typedProjects.filter((p) => p.category === "web"),
     [typedProjects]
@@ -226,44 +249,91 @@ const Portfolio: React.FC = () => {
       className="min-h-screen bg-gradient-to-b from-emerald-50 via-white to-emerald-50 text-emerald-950 dark:from-[#04150e] dark:via-[#061b12] dark:to-[#03120b] dark:text-emerald-100"
       style={bgGrid}
     >
-      <Header />
-      <Hero />
+      {/* Header fades in on load */}
+      <motion.div
+        initial={{ opacity: 0, y: -16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+      >
+        <Header />
+      </motion.div>
+
+      {/* Hero fades in with slight delay */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.15, ease: "easeOut" }}
+      >
+        <Hero />
+      </motion.div>
 
       <Section id="projects" className="bg-emerald-50/50 dark:bg-emerald-950/30">
-        <h2 className="text-center text-3xl font-bold">Projects</h2>
+        <SectionHeading>Projects</SectionHeading>
         <Divider />
 
         {/* VIDEO */}
-        <h3 className="text-xl font-semibold text-center mb-6">
-          Video Editing 🎬
-        </h3>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-16">
-            {videoProjects.map((p, i) => (
-              <VideoCard
-                key={`video-${p.title}-${i}`}
-                p={p}
-                isActive={activeIndex === i}
-                onActivate={() => setActiveIndex(i)}
-              />
-            ))}
-        </div>
+        <SubHeading>Video Editing 🎬</SubHeading>
+        <motion.div
+          variants={stagger(0.07)}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.05 }}
+          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-16"
+        >
+          {videoProjects.map((p, i) => (
+            <VideoCard
+              key={`video-${p.title}-${i}`}
+              p={p}
+              isActive={activeIndex === i}
+              onActivate={() => setActiveIndex(i)}
+            />
+          ))}
+        </motion.div>
 
         <Divider />
 
         {/* WEB */}
-        <h3 className="text-xl font-semibold text-center mb-6">
-          Web Development 💻
-        </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <SubHeading>Web Development 💻</SubHeading>
+        <motion.div
+          variants={stagger(0.1)}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.05 }}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+        >
           {webProjects.map((p, i) => (
             <ProjectCard key={`web-${p.title}-${i}`} p={p} />
           ))}
-        </div>
+        </motion.div>
       </Section>
 
-      <Skills />
-      <Contact />
-      <Footer />
+      {/* Skills + Contact + Footer fade in on scroll */}
+      <motion.div
+        variants={fadeUp}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.1 }}
+      >
+        <Skills />
+      </motion.div>
+
+      <motion.div
+        variants={fadeUp}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.1 }}
+      >
+        <Contact />
+      </motion.div>
+
+      <motion.div
+        variants={fadeUp}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.3 }}
+      >
+        <Footer />
+      </motion.div>
     </div>
   );
 };
