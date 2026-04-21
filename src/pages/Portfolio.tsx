@@ -7,6 +7,7 @@ import Footer from "../components/Footer";
 import Skills from "../components/Skills";
 import Hero from "../components/Hero";
 import Header from "../components/Header";
+import Experience from "../components/Experience";
 
 type Project = {
   title: string;
@@ -265,6 +266,15 @@ const Portfolio: React.FC = () => {
         transition={{ duration: 0.6, delay: 0.15, ease: "easeOut" }}
       >
         <Hero />
+      </motion.div>
+
+      <motion.div
+        variants={fadeUp}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.1 }}
+      >
+        <Experience />
       </motion.div>
 
       <Section id="projects" className="bg-emerald-50/50 dark:bg-emerald-950/30">
