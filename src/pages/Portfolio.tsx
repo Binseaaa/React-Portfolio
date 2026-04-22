@@ -300,8 +300,33 @@ const Portfolio: React.FC = () => {
           ))}
         </motion.div>
 
-        <Divider />
+        {/* LONG FORM VIDEO */}
+        {/* LONG FORM VIDEO */}
+        <SubHeading>Long Form 🎥</SubHeading>
 
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl mx-auto mb-20">
+          <div className="w-full aspect-video rounded-2xl overflow-hidden shadow-lg">
+            <iframe
+              src="https://www.youtube.com/embed/D8IbesHh8_w"
+              title="Long Form Video 1"
+              className="w-full h-full"
+              allow="autoplay; fullscreen; picture-in-picture"
+              allowFullScreen
+              loading="lazy"
+            />
+          </div>
+
+          <div className="w-full aspect-video rounded-2xl overflow-hidden shadow-lg">
+            <iframe
+              src="https://www.youtube.com/embed/i2uvtGz0E5Q"
+              title="Long Form Video 2"
+              className="w-full h-full"
+              allow="autoplay; fullscreen; picture-in-picture"
+              allowFullScreen
+              loading="lazy"
+            />
+          </div>
+        </div>
         {/* WEB */}
         <SubHeading>Web Development 💻</SubHeading>
         <motion.div

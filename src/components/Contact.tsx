@@ -7,7 +7,7 @@ const Divider = () => (
 const Contact: React.FC = () => (
   <section
     id="contact"
-    className="py-20 bg-emerald-50/50 dark:bg-emerald-950/30"
+    className="py-10 bg-emerald-50/50 dark:bg-emerald-950/30"
   >
     <div className="mx-auto max-w-2xl text-center">
       <h2 className="text-3xl font-bold">Contact</h2>
