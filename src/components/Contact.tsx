@@ -52,7 +52,7 @@ const Contact: React.FC = () => (
         </a>
 
         <a
-          href="https://www.linkedin.com/in/vince-deguma-83606536a/"
+          href="https://www.linkedin.com/in/vince-d-83606536a/"
           target="_blank"
           rel="noopener noreferrer"
           className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-2xl border border-emerald-300 bg-white/50 px-6 py-3 font-semibold text-emerald-800 shadow-sm backdrop-blur transition hover:bg-white dark:border-emerald-700/40 dark:bg-emerald-900/40 dark:text-emerald-100"
