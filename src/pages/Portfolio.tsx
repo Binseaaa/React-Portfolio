@@ -8,6 +8,8 @@ import Skills from "../components/Skills";
 import Hero from "../components/Hero";
 import Header from "../components/Header";
 import Experience from "../components/Experience";
+import Ticker from "../components/Ticker";
+import Divider from "../components/Divider";
 
 type Project = {
   title: string;
@@ -18,7 +20,6 @@ type Project = {
   cover?: string;
 };
 
-// ── animation presets ────────────────────────────────────────────────────────
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
   show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: "easeOut" as const } },
@@ -29,32 +30,27 @@ const stagger = (delayChildren = 0.08) => ({
   show: { transition: { staggerChildren: delayChildren } },
 });
 
-// ── Section ──────────────────────────────────────────────────────────────────
-const Section: React.FC<{
-  id: string;
-  className?: string;
-  children: React.ReactNode;
-}> = ({ id, className, children }) => (
+const Section: React.FC<{ id: string; className?: string; children: React.ReactNode }> = ({
+  id, className, children,
+}) => (
   <motion.section
     id={id}
-    className={`py-20 ${className ?? ""}`}
+    className={`ppy-12 md:py-16 ${className ?? ""}`}
     variants={stagger()}
     initial="hidden"
     whileInView="show"
     viewport={{ once: true, amount: 0.1 }}
   >
-    <div className="mx-auto w-full max-w-7xl px-6 lg:px-8">{children}</div>
+    <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">{children}</div>
   </motion.section>
 );
 
-// ── Badge ────────────────────────────────────────────────────────────────────
 const Badge: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <span className="rounded-full border border-emerald-200 bg-emerald-50/70 px-3 py-1 text-sm font-medium text-emerald-700 shadow-sm backdrop-blur dark:border-emerald-700/40 dark:bg-emerald-900/30 dark:text-emerald-200">
     {children}
   </span>
 );
 
-// ── ProjectCard ──────────────────────────────────────────────────────────────
 const ProjectCard: React.FC<{ p: Project }> = ({ p }) => (
   <motion.a
     href={p.href}
@@ -66,42 +62,28 @@ const ProjectCard: React.FC<{ p: Project }> = ({ p }) => (
   >
     <div className="relative h-48 w-full overflow-hidden">
       {p.cover ? (
-        <img
-          src={p.cover}
-          alt={p.title}
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-        />
+        <img src={p.cover} alt={p.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
       ) : (
         <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-emerald-200 to-emerald-100 dark:from-emerald-800 dark:to-emerald-700" />
       )}
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-emerald-950/50 via-transparent to-transparent" />
     </div>
-
     <div className="space-y-3 p-5">
-      <div className="flex items-start justify-between gap-4">
-        <h3 className="text-lg font-semibold text-emerald-900 dark:text-emerald-100">
-          {p.title}
-        </h3>
+      <div className="flex items-start justify-between gap-3 md:gap-4">
+        <h3 className="text-lg font-semibold text-emerald-900 dark:text-emerald-100">{p.title}</h3>
         <ExternalLink className="h-4 w-4 text-emerald-700 opacity-0 transition group-hover:opacity-100 dark:text-emerald-300" />
       </div>
-      <p className="text-sm text-emerald-900/80 dark:text-emerald-100/80">
-        {p.blurb}
-      </p>
+      <p className="text-sm text-emerald-900/80 dark:text-emerald-100/80">{p.blurb}</p>
       <div className="flex flex-wrap gap-2">
-        {p.tags.map((t) => (
-          <Badge key={t}>{t}</Badge>
-        ))}
+        {p.tags.map((t) => <Badge key={t}>{t}</Badge>)}
       </div>
     </div>
   </motion.a>
 );
 
-// ── VideoCard ────────────────────────────────────────────────────────────────
-const VideoCard: React.FC<{
-  p: Project;
-  isActive: boolean;
-  onActivate: () => void;
-}> = ({ p, isActive, onActivate }) => {
+const VideoCard: React.FC<{ p: Project; isActive: boolean; onActivate: () => void }> = ({
+  p, isActive, onActivate,
+}) => {
   const videoRef = React.useRef<HTMLVideoElement | null>(null);
   const [isPlaying, setIsPlaying] = React.useState(false);
   const [progress, setProgress] = React.useState(0);
@@ -123,14 +105,8 @@ const VideoCard: React.FC<{
     const video = videoRef.current;
     if (!video) return;
     onActivate();
-    if (isPlaying) {
-      video.pause();
-      setIsPlaying(false);
-    } else {
-      video.muted = false;
-      video.play();
-      setIsPlaying(true);
-    }
+    if (isPlaying) { video.pause(); setIsPlaying(false); }
+    else { video.muted = false; video.play(); setIsPlaying(true); }
   };
 
   const handleTimeUpdate = () => {
@@ -150,7 +126,7 @@ const VideoCard: React.FC<{
   return (
     <motion.div
       variants={fadeUp}
-      whileHover={{ scale: 1.03 }}
+      whileHover={{ y: -6, boxShadow: "0 20px 40px -12px rgba(16,185,129,0.25)" }}
       transition={{ type: "spring", stiffness: 280, damping: 22 }}
       className="relative overflow-hidden rounded-2xl shadow-lg bg-black"
     >
@@ -162,28 +138,13 @@ const VideoCard: React.FC<{
         preload="metadata"
         onTimeUpdate={handleTimeUpdate}
       />
-      <button
-        onClick={togglePlay}
-        className="absolute inset-0 flex items-center justify-center z-10"
-      >
-        <div
-          className={`flex items-center justify-center bg-black/50 backdrop-blur-md p-4 rounded-full transition-all ${
-            isPlaying ? "opacity-0 scale-75" : "opacity-100 scale-100"
-          }`}
-        >
-          {isPlaying ? (
-            <Pause className="w-6 h-6 text-white" />
-          ) : (
-            <Play className="w-6 h-6 text-white" />
-          )}
+      <button onClick={togglePlay} className="absolute inset-0 flex items-center justify-center z-10">
+        <div className={`flex items-center justify-center bg-black/50 backdrop-blur-md p-4 rounded-full transition-all ${isPlaying ? "opacity-0 scale-75" : "opacity-100 scale-100"}`}>
+          {isPlaying ? <Pause className="w-6 h-6 text-white" /> : <Play className="w-6 h-6 text-white" />}
         </div>
       </button>
       <input
-        type="range"
-        min="0"
-        max="100"
-        value={progress}
-        onChange={handleSeek}
+        type="range" min="0" max="100" value={progress} onChange={handleSeek}
         className="absolute bottom-2 left-2 right-2 z-10 w-[calc(100%-1rem)] accent-emerald-500"
       />
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
@@ -191,75 +152,48 @@ const VideoCard: React.FC<{
   );
 };
 
-// ── Divider ──────────────────────────────────────────────────────────────────
-const Divider = () => (
-  <motion.div
-    className="mx-auto my-10 h-px w-32 bg-gradient-to-r from-transparent via-emerald-400 to-transparent opacity-60"
-    initial={{ scaleX: 0, opacity: 0 }}
-    whileInView={{ scaleX: 1, opacity: 0.6 }}
-    transition={{ duration: 0.6, ease: "easeOut" }}
-    viewport={{ once: true }}
-  />
-);
-
-// ── SectionHeading ───────────────────────────────────────────────────────────
-const SectionHeading: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <motion.h2
-    variants={fadeUp}
-    className="text-center text-3xl font-bold"
-  >
-    {children}
-  </motion.h2>
-);
-
-const SubHeading: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <motion.h3
-    variants={fadeUp}
-    className="text-xl font-semibold text-center mb-6"
-  >
-    {children}
-  </motion.h3>
-);
-
-// ── Portfolio ────────────────────────────────────────────────────────────────
 const Portfolio: React.FC = () => {
   const [activeIndex, setActiveIndex] = React.useState<number | null>(null);
 
-  const bgGrid = useMemo(
-    () => ({
-      backgroundImage:
-        "radial-gradient(rgba(16, 185, 129, 0.15) 1px, transparent 1px), radial-gradient(rgba(16, 185, 129, 0.08) 1px, transparent 1px)",
-      backgroundSize: "24px 24px, 48px 48px",
-      backgroundPosition: "0 0, 12px 12px",
-    }),
-    []
-  );
+  const bgGrid = useMemo(() => ({
+    backgroundImage:
+      "radial-gradient(rgba(16, 185, 129, 0.15) 1px, transparent 1px), radial-gradient(rgba(16, 185, 129, 0.08) 1px, transparent 1px)",
+    backgroundSize: "24px 24px, 48px 48px",
+    backgroundPosition: "0 0, 12px 12px",
+  }), []);
 
   const typedProjects: Project[] = (projects as Project[]) ?? [];
-  const videoProjects = useMemo(
-    () => typedProjects.filter((p) => p.category === "video"),
-    [typedProjects]
-  );
-  const webProjects = useMemo(
-    () => typedProjects.filter((p) => p.category === "web"),
-    [typedProjects]
-  );
+  const videoProjects = useMemo(() => typedProjects.filter((p) => p.category === "video"), [typedProjects]);
+  const webProjects = useMemo(() => typedProjects.filter((p) => p.category === "web"), [typedProjects]);
 
   return (
     <div
       className="min-h-screen bg-gradient-to-b from-emerald-50 via-white to-emerald-50 text-emerald-950 dark:from-[#04150e] dark:via-[#061b12] dark:to-[#03120b] dark:text-emerald-100"
       style={bgGrid}
     >
-      {/* Header fades in on load */}
-      <motion.div
-        initial={{ opacity: 0, y: -16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
-      >
-        <Header />
-      </motion.div>
+    {/* Unique Aurora Background */}
+    <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
 
-      {/* Hero fades in with slight delay */}
+      {/* Base glow layer */}
+      <div className="absolute -top-40 left-1/2 h-[600px] w-[600px] -translate-x-1/2 rounded-full bg-emerald-400/20 blur-[140px] animate-pulse" />
+
+      {/* Left aurora wave */}
+      <div className="absolute top-[20%] -left-40 h-[500px] w-[500px] rounded-full bg-teal-400/20 blur-[160px] animate-[float_8s_ease-in-out_infinite]" />
+
+      {/* Right deep glow */}
+      <div className="absolute top-[55%] -right-40 h-[600px] w-[600px] rounded-full bg-emerald-500/15 blur-[180px] animate-[float_10s_ease-in-out_infinite_reverse]" />
+
+      {/* Subtle center light core */}
+      <div className="absolute bottom-[-200px] left-1/2 h-[700px] w-[700px] -translate-x-1/2 rounded-full bg-lime-300/10 blur-[200px]" />
+
+      {/* Grain overlay (gives premium feel) */}
+      <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(#000_1px,transparent_1px)] [background-size:24px_24px]" />
+    </div>
+
+      <Header />
+      {/* Spacer so content doesn't hide under fixed header */}
+      <div className="pt-14 md:pt-16"/>
+
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -268,105 +202,90 @@ const Portfolio: React.FC = () => {
         <Hero />
       </motion.div>
 
-      <motion.div
-        variants={fadeUp}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, amount: 0.1 }}
-      >
-        <Experience />
-      </motion.div>
+      <Divider className="w-full" />
 
-      <Section id="projects" className="bg-emerald-50/50 dark:bg-emerald-950/30">
-        <SectionHeading>Projects</SectionHeading>
-        <Divider />
-
-        {/* VIDEO */}
-        <SubHeading>Video Editing 🎬</SubHeading>
-        <motion.div
-          variants={stagger(0.07)}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.05 }}
-          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-16"
-        >
-          {videoProjects.map((p, i) => (
-            <VideoCard
-              key={`video-${p.title}-${i}`}
-              p={p}
-              isActive={activeIndex === i}
-              onActivate={() => setActiveIndex(i)}
-            />
-          ))}
-        </motion.div>
-
-        {/* LONG FORM VIDEO */}
-        {/* LONG FORM VIDEO */}
-        <SubHeading>Long Form 🎥</SubHeading>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl mx-auto mb-20">
-          <div className="w-full aspect-video rounded-2xl overflow-hidden shadow-lg">
-            <iframe
-              src="https://www.youtube.com/embed/D8IbesHh8_w"
-              title="Long Form Video 1"
-              className="w-full h-full"
-              allow="autoplay; fullscreen; picture-in-picture"
-              allowFullScreen
-              loading="lazy"
-            />
-          </div>
-
-          <div className="w-full aspect-video rounded-2xl overflow-hidden shadow-lg">
-            <iframe
-              src="https://www.youtube.com/embed/i2uvtGz0E5Q"
-              title="Long Form Video 2"
-              className="w-full h-full"
-              allow="autoplay; fullscreen; picture-in-picture"
-              allowFullScreen
-              loading="lazy"
-            />
-          </div>
-        </div>
-        {/* WEB */}
-        <SubHeading>Web Development 💻</SubHeading>
-        <motion.div
-          variants={stagger(0.1)}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.05 }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
-        >
-          {webProjects.map((p, i) => (
-            <ProjectCard key={`web-${p.title}-${i}`} p={p} />
-          ))}
-        </motion.div>
-      </Section>
-
-      {/* Skills + Contact + Footer fade in on scroll */}
-      <motion.div
-        variants={fadeUp}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, amount: 0.1 }}
-      >
+      <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.1 }}>
         <Skills />
       </motion.div>
 
-      <motion.div
-        variants={fadeUp}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, amount: 0.1 }}
-      >
+      <div className="mt-6 md:mt-10 w-full">
+        <Ticker />
+      </div>
+
+      <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.1 }}>
+        <Experience />
+      </motion.div>
+
+      <Divider/>
+
+      {/* PROJECTS */}
+      <Section id="projects" className="relative">
+        <div className="mb-4 md:mb-6 md:mb-8 text-center">
+          <h2 className="text-4xl md:text-5xl font-bold tracking-tight">
+            Featured <span className="text-emerald-500">Work</span>
+          </h2>
+          <p className="mt-3 text-emerald-900/70 dark:text-emerald-100/60">
+            A mix of video editing, long-form storytelling, and web builds
+          </p>
+        </div>
+
+        <div className="mb-12 md:mb-16">
+          <h3 className="text-lg font-semibold text-emerald-800 dark:text-emerald-200 mb-4 md:mb-6">Short Form Edits</h3>
+          <motion.div
+            variants={stagger(0.07)} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.1 }}
+            className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4"
+          >
+            {videoProjects.map((p, i) => (
+              <VideoCard key={`video-${p.title}-${i}`} p={p} isActive={activeIndex === i} onActivate={() => setActiveIndex(i)} />
+            ))}
+          </motion.div>
+        </div>
+
+        <div className="mb-12 md:mb-16">
+          <div className="flex items-center justify-between mb-4 md:mb-6">
+            <h3 className="text-lg font-semibold text-emerald-800 dark:text-emerald-200">Long Form Content</h3>
+            <span className="text-xs uppercase tracking-widest text-emerald-600/60">Storytelling</span>
+          </div>
+          <motion.div
+            variants={stagger()} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }}
+            className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6"
+          >
+            <motion.div variants={fadeUp} whileHover={{ scale: 1.02 }} className="md:col-span-2 aspect-video rounded-2xl overflow-hidden shadow-xl">
+              <iframe src="https://www.youtube.com/embed/D8IbesHh8_w" className="w-full h-full" allowFullScreen />
+            </motion.div>
+            <motion.div className="flex flex-col gap-4 md:gap-6">
+              <motion.div whileHover={{ scale: 1.02 }} className="aspect-video rounded-2xl overflow-hidden shadow-lg">
+                <iframe src="https://www.youtube.com/embed/i2uvtGz0E5Q" className="w-full h-full" allowFullScreen />
+              </motion.div>
+            </motion.div>
+          </motion.div>
+        </div>
+
+        <div>
+          <div className="flex items-center justify-between mb-4 md:mb-6">
+            <h3 className="text-lg font-semibold text-emerald-800 dark:text-emerald-200">Web Development</h3>
+            <span className="text-xs uppercase tracking-widest text-emerald-600/60">Interfaces</span>
+          </div>
+          <motion.div
+            variants={stagger(0.1)} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.1 }}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+          >
+            {webProjects.map((p, i) => (
+              <ProjectCard key={`web-${p.title}-${i}`} p={p} />
+            ))}
+          </motion.div>
+        </div>
+      </Section>
+
+      <div className="my-8 md:my-12">
+        <Divider/>
+      </div>
+
+      <motion.div variants={fadeUp} initial="hidden" whileInView="show">
         <Contact />
       </motion.div>
 
-      <motion.div
-        variants={fadeUp}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, amount: 0.3 }}
-      >
+      <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.3 }}>
         <Footer />
       </motion.div>
     </div>

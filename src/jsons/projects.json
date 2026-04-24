@@ -18,7 +18,7 @@
     {
     "title": "Portfolio Website",
     "blurb": "Modern responsive portfolio built with React, Tailwind, and JSON data. Features smooth animations, dark mode, and easy content management.",
-    "tags": ["React", "Tailwind", "JSON"],
+    "tags": ["React", "Tailwind", "JSON", "TypeScript"],
     "category": "web",
     "href": "https://vince-deguma-resume.vercel.app/",
     "cover": "/Portfolio Thumbnail.png"
