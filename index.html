@@ -1,10 +1,31 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/logos.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vince - Portfolio</title>
+    <script>
+      (function () {
+        try {
+          const saved = localStorage.getItem("theme-dark");
+
+          const isDark =
+            saved !== null
+              ? saved === "1"
+              : window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+          const root = document.documentElement;
+
+          // apply theme BEFORE paint
+          if (isDark) root.classList.add("dark");
+          else root.classList.remove("dark");
+
+          // IMPORTANT: mark ready
+          root.style.colorScheme = isDark ? "dark" : "light";
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
